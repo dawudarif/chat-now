@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import Ring from './components/loaders/Ring';
+import { Suspense, useEffect } from 'react';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { useDispatch } from 'react-redux';
+import { fetchUserProfile } from "./features/account";
+import './index.css'
+
+const Fallback = () => (
+  <div className="flex h-[80vh] w-full flex-col items-center justify-center gap-6 bg-black">
+    <Ring size={50} />
+  </div>
+);
+
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserProfile() as any);
+  }, []);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Suspense
+        fallback={<Fallback />}>
+        <Routes>
+          <Route index path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </Suspense>
+    </>
   );
 }
 

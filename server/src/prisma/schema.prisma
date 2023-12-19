@@ -1,0 +1,55 @@
+// Define your datasource
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+// Define your Prisma client generator
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Define your Account model
+model Account {
+  id            String                    @id @default(uuid())
+  name          String
+  email         String                    @unique
+  username      String                    @unique
+  password      String
+  createdAt     DateTime                  @default(now())
+  conversations ConversationParticipant[]
+  Message       Message[]
+}
+
+model Conversation {
+  id              String                    @id @default(uuid())
+  participants    ConversationParticipant[]
+  latestMessageId String?                   @unique
+  latestMessage   Message?                  @relation(name: "latestConversationMessage", fields: [latestMessageId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  messages        Message[]
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+}
+
+model ConversationParticipant {
+  id                   String       @id @default(uuid())
+  userId               String
+  user                 Account      @relation(fields: [userId], references: [id])
+  conversationId       String
+  conversation         Conversation @relation(fields: [conversationId], references: [id])
+  hasSeenLatestMessage Boolean
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+model Message {
+  id             String        @id @default(uuid())
+  conversationId String
+  conversation   Conversation  @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         Account       @relation(fields: [senderId], references: [id])
+  body           String
+  isLatestIn     Conversation? @relation(name: "latestConversationMessage")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
