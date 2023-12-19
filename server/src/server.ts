@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userRoutes from './routes/userRoutes';
+import conversationRoutes from './routes/conversationRoutes';
 
 const app = express();
 const server = createServer(app);
@@ -12,6 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/conversations', conversationRoutes);
+
 
 // Socket IO
 io.on('connection', (socket) => {
