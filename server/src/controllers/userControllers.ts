@@ -106,3 +106,32 @@ export const getUserProfile = async (req: Request, res: Response) => {
     username: user.username,
   });
 };
+
+
+export const searchUsername = async (req: Request, res: Response) => {
+  const { query } = req.query;
+
+  if (!query) {
+    res.status(401).send('Provide query string');
+    return;
+  }
+
+  const searchResult = await prisma.account.findMany({
+    where: {
+      username: {
+        contains: query as string,
+        not: req.user.username,
+        mode: 'insensitive',
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      username: true,
+    },
+  });
+
+  if (searchResult) {
+    res.status(200).json(searchResult);
+  }
+};

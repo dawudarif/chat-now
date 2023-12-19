@@ -4,3 +4,10 @@ export interface IUserProfile {
   email: string,
   username: string;
 }
+
+
+export interface ISearchResult {
+  id: string;
+  name: string;
+  username: string
+}
