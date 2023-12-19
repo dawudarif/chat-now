@@ -1,12 +1,15 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { ISearchResult } from "../../../types/types";
+import { useNavigate } from "react-router-dom";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
 }
 
 const SingleSearchItem: React.FC<SingleSearchItemProps> = ({ data }) => {
+  const navigate = useNavigate();
+
   const createConversation = async (id: string) => {
     const generateId = uuidv4();
 
@@ -21,7 +24,10 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({ data }) => {
       console.log(response.data);
 
       if (response.status === 200) {
-        console.log(response.data);
+        navigate(
+          `/?id=${response.data.conversationId}&name=${response.data.name}`,
+        );
+      } else {
       }
     } catch (error) {}
   };
@@ -32,7 +38,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({ data }) => {
       key={data.id}
       onDoubleClick={() => createConversation(data.id)}
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#252525] font-bold text-white">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#252525] font-bold uppercase text-white">
         {data.name.slice(0, 1)}
       </div>
       <h4>{data.name}</h4>
