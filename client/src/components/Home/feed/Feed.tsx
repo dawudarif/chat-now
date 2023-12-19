@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import useSearchUsername from "../../../hooks/useSearchUsername";
-import { IChat } from "../../../types/types";
+import { IChat, ISearchResult } from "../../../types/types";
 import SingleSearchItem from "./SingleSearchItem";
 import SingleConversationItem from "./SingleConversationItem";
 
@@ -39,8 +39,14 @@ const Feed = () => {
           ? chats.map((item) => (
               <SingleConversationItem data={item} key={item.id} />
             ))
-          : results.map((item) => (
-              <SingleSearchItem data={item} key={item.id} />
+          : results.map((item: ISearchResult) => (
+              <SingleSearchItem
+                data={item}
+                key={item.id}
+                chats={chats}
+                setChats={(chats: Array<IChat>) => setChats(chats)}
+                setSearch={(search: string) => setSearch(search)}
+              />
             ))}
       </div>
     </div>

@@ -1,35 +1,48 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { ISearchResult } from "../../../types/types";
+import { IChat, ISearchResult } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
+  chats: Array<IChat>;
+  setChats: (chats: Array<IChat>) => void;
+  setSearch: (search: string) => void;
 }
 
-const SingleSearchItem: React.FC<SingleSearchItemProps> = ({ data }) => {
+const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
+  data,
+  chats,
+  setChats,
+  setSearch,
+}) => {
   const navigate = useNavigate();
 
   const createConversation = async (id: string) => {
+    const initialChats = [...chats];
     const generateId = uuidv4();
-
     const body = {
       id,
       conversationId: generateId,
     };
+
     try {
       const response = await axios.post("api/conversations/create", body, {
         withCredentials: true,
       });
-      console.log(response.data);
 
       if (response.status === 200) {
         navigate(
           `/?id=${response.data.conversationId}&name=${response.data.name}`,
         );
       } else {
+        setChats([response.data, ...initialChats]);
+        navigate("/");
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setSearch("");
+    }
   };
 
   return (
