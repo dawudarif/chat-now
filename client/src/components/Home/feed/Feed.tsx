@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useSearchUsername from "../../../hooks/useSearchUsername";
+import SingleItem from "./SingleItem";
 
 const Feed = () => {
   const [search, setSearch] = useState("");
@@ -16,15 +17,7 @@ const Feed = () => {
       />
       <div>
         {results.map((item) => (
-          <div
-            className="flex items-center gap-3 border-b border-[#252525] p-2 text-white hover:bg-[#1c1c1e]"
-            key={item.id}
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#252525] font-bold text-white">
-              {item.name.slice(0, 1)}
-            </div>
-            <h4>{item.username}</h4>
-          </div>
+          <SingleItem data={item} key={item.id} />
         ))}
       </div>
     </div>
