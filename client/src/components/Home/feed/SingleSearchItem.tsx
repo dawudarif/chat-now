@@ -32,9 +32,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
       });
 
       if (response.status === 200) {
-        navigate(
-          `/?id=${response.data.conversationId}&name=${response.data.name}`,
-        );
+        navigate(`/?id=${response.data.id}&name=${response.data.name}`);
       } else {
         setChats([response.data, ...initialChats]);
         navigate("/");
