@@ -25,6 +25,7 @@ export const createConversation = async (req: Request, res: Response) => {
     include: {
       participants: {
         select: {
+
           id: true,
           userId: true,
           hasSeenLatestMessage: true,
@@ -42,47 +43,49 @@ export const createConversation = async (req: Request, res: Response) => {
       },
     },
   });
+
 
   if (findConversation) {
     res.status(200).json(findConversation);
     return;
-  }
-
-  const conversation = await prisma.conversation.create({
-    data: {
-      id: conversationId,
-      participants: {
-        createMany: {
-          data: participantIds.map((id) => ({
-            userId: id,
-            hasSeenLatestMessage: id === userId,
-          })),
-        },
-      },
-    },
-    include: {
-      participants: {
-        select: {
-          id: true,
-          userId: true,
-          hasSeenLatestMessage: true,
-          user: {
-            select: {
-              name: true,
-            },
+  } else {
+    const conversation = await prisma.conversation.create({
+      data: {
+        id: conversationId,
+        participants: {
+          createMany: {
+            data: participantIds.map((id) => ({
+              userId: id,
+              hasSeenLatestMessage: id === userId,
+            })),
           },
         },
       },
-      latestMessage: {
-        select: {
-          body: true,
+      include: {
+        participants: {
+          select: {
+            id: true,
+            userId: true,
+            hasSeenLatestMessage: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        latestMessage: {
+          select: {
+            body: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  res.status(201).json(conversation);
-};
+    res.status(201).json(conversation);
+  }
+}
+
 
 export const allConversations = async (req: Request, res: Response) => {
   const userId = req.user.id;

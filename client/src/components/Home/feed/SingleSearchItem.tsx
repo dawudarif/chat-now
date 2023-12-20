@@ -60,7 +60,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#252525] font-bold uppercase text-white">
         {data.name.slice(0, 1)}
       </div>
-      <h4>{data.name}</h4>
+      <h4>{data.username}</h4>
     </div>
   );
 };
