@@ -4,11 +4,13 @@ import useSearchUsername from "../../../hooks/useSearchUsername";
 import { IChat, ISearchResult } from "../../../types/types";
 import SingleSearchItem from "./SingleSearchItem";
 import SingleConversationItem from "./SingleConversationItem";
+import { useSelector } from "react-redux";
 
 const Feed = () => {
   const [search, setSearch] = useState("");
   const [chats, setChats] = useState<Array<IChat>>([]);
   const { results } = useSearchUsername(search);
+  const state = useSelector((store: any) => store.account.userProfile);
 
   const getConversations = async () => {
     try {
@@ -36,16 +38,26 @@ const Feed = () => {
       />
       <div>
         {search === ""
-          ? chats.map((item) => (
-              <SingleConversationItem data={item} key={item.id} />
-            ))
-          : results.map((item: ISearchResult) => (
+          ? chats.map((item) => {
+              const participant = item.participants.find((p) => {
+                return p.userId === state?.id;
+              });
+
+              return (
+                <SingleConversationItem
+                  hasSeenLatestMessage={!participant?.hasSeenLatestMessage}
+                  data={item}
+                  key={item.id}
+                />
+              );
+            })
+          : results.map((item) => (
               <SingleSearchItem
                 data={item}
                 key={item.id}
                 chats={chats}
-                setChats={(chats: Array<IChat>) => setChats(chats)}
-                setSearch={(search: string) => setSearch(search)}
+                setChats={(chats) => setChats(chats)}
+                setSearch={(search) => setSearch(search)}
               />
             ))}
       </div>

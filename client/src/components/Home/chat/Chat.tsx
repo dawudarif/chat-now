@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import ConversationHeader from "./ConversationHeader";
 import MessageInput from "./MessageInput";
+import ChatBody from "./ChatBody";
 
 const Chat = () => {
   const [searchParams] = useSearchParams();
@@ -20,8 +21,8 @@ const Chat = () => {
   return (
     <div className="relative flex h-[100vh] w-[75%] flex-col border-l-2 border-[#252525] bg-black text-white">
       <ConversationHeader name={name} />
-      <div>chat</div>
-      <MessageInput />
+      <ChatBody conversationId={id!} />
+      <MessageInput conversationId={id!} />
     </div>
   );
 };

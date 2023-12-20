@@ -1,7 +1,8 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { IChat, ISearchResult } from "../../../types/types";
+import { IChat, IParticipant, ISearchResult } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
@@ -17,6 +18,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
   setSearch,
 }) => {
   const navigate = useNavigate();
+  const state = useSelector((store: any) => store.account.userProfile);
 
   const createConversation = async (id: string) => {
     const initialChats = [...chats];
@@ -31,11 +33,17 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
         withCredentials: true,
       });
 
+      const chatName = response.data.participants.find(
+        (item: IParticipant) => item.userId !== state.id,
+      );
+
+      console.log(response.data);
+
       if (response.status === 200) {
-        navigate(`/?id=${response.data.id}&name=${response.data.name}`);
+        navigate(`/?id=${response.data.id}&name=${chatName.user.name}`);
       } else {
         setChats([response.data, ...initialChats]);
-        navigate("/");
+        navigate(`/?id=${response.data.id}&name=${chatName.user.name}`);
       }
     } catch (error) {
     } finally {
