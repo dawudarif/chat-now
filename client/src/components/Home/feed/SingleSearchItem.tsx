@@ -1,13 +1,13 @@
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-import { IChat, IParticipant, ISearchResult } from "../../../types/types";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { IFeedItem, IParticipant, ISearchResult } from "../../../types/types";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
-  chats: Array<IChat>;
-  setChats: (chats: Array<IChat>) => void;
+  chats: Array<IFeedItem>;
+  setChats: (chats: Array<IFeedItem>) => void;
   setSearch: (search: string) => void;
 }
 
@@ -58,7 +58,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
       onDoubleClick={() => createConversation(data.id)}
     >
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#252525] font-bold uppercase text-white">
-        {data.name.slice(0, 1)}
+        {data.name.slice(0, 2)}
       </div>
       <h4>{data.username}</h4>
     </div>

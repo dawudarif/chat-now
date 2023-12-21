@@ -25,13 +25,13 @@ export const createConversation = async (req: Request, res: Response) => {
     include: {
       participants: {
         select: {
-
           id: true,
           userId: true,
           hasSeenLatestMessage: true,
           user: {
             select: {
               name: true,
+              username: true
             },
           },
         },
@@ -70,6 +70,7 @@ export const createConversation = async (req: Request, res: Response) => {
             user: {
               select: {
                 name: true,
+                username: true
               },
             },
           },
@@ -107,6 +108,7 @@ export const allConversations = async (req: Request, res: Response) => {
           user: {
             select: {
               name: true,
+              username: true
             },
           },
         },

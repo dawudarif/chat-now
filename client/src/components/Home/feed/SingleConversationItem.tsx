@@ -1,10 +1,10 @@
 import React from "react";
-import { IChat } from "../../../types/types";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { IFeedItem, IParticipant } from "../../../types/types";
 
 interface SingleConversationItemProps {
-  data: IChat;
+  data: IFeedItem;
   hasSeenLatestMessage: boolean;
 }
 
@@ -16,7 +16,11 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
   const [searchParams] = useSearchParams();
   const searchId = searchParams.get("id");
   const state = useSelector((store: any) => store.account.userProfile);
-  const otherUser = data.participants.find((item) => item.userId !== state.id);
+  const otherUser = data.participants.find(
+    (item: IParticipant) => item.userId !== state.id,
+  );
+
+  console.log(otherUser);
 
   return (
     <div
@@ -31,9 +35,9 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
       }
     >
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#252525] font-bold uppercase text-white">
-        {data.participants[0].user.name.slice(0, 1)}
+        {otherUser?.user.name.slice(0, 2)}
       </div>
-      <div className="capitalize">{data.participants[1].user.name}</div>
+      <div className="capitalize">{otherUser?.user.username}</div>
     </div>
   );
 };

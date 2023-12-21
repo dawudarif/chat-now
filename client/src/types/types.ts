@@ -12,7 +12,7 @@ export interface ISearchResult {
   username: string
 }
 
-export interface IChat {
+export interface IFeedItem {
   id: string;
   latestMessage: null | { body: string };
   latestMessageId: null | string;
@@ -24,6 +24,6 @@ export interface IChat {
 export interface IParticipant {
   hasSeenLatestMessage: string;
   id: string;
-  user: { name: string };
+  user: { name: string, username: string };
   userId: string
 }

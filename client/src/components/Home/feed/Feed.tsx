@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import useSearchUsername from "../../../hooks/useSearchUsername";
-import { IChat, ISearchResult } from "../../../types/types";
-import SingleSearchItem from "./SingleSearchItem";
-import SingleConversationItem from "./SingleConversationItem";
 import { useSelector } from "react-redux";
+import useSearchUsername from "../../../hooks/useSearchUsername";
+import { IFeedItem } from "../../../types/types";
+import SingleConversationItem from "./SingleConversationItem";
+import SingleSearchItem from "./SingleSearchItem";
 
 const Feed = () => {
   const [search, setSearch] = useState("");
-  const [chats, setChats] = useState<Array<IChat>>([]);
+  const [chats, setChats] = useState<Array<IFeedItem>>([]);
   const { results } = useSearchUsername(search);
   const state = useSelector((store: any) => store.account.userProfile);
 
