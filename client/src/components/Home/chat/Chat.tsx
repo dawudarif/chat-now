@@ -1,7 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import ChatBody from "./ChatBody";
 import ConversationHeader from "./ConversationHeader";
 import MessageInput from "./MessageInput";
+import ChatBody from "./ChatBody";
+import axios from "axios";
+import { useEffect } from "react";
 
 const Chat = () => {
   const [searchParams] = useSearchParams();

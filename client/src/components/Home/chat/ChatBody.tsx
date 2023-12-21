@@ -36,7 +36,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   }, [conversationId]);
 
   return (
-    <div className="mb-24 h-max overflow-x-hidden overflow-y-scroll">
+    <div className="hide-scrollbar mb-24 h-full flex-col overflow-x-hidden overflow-y-scroll align-bottom">
       {messages.map((message: IMessage) => {
         const sentByMe = message.senderId === state?.id;
         return (
