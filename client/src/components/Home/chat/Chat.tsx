@@ -22,7 +22,7 @@ const Chat = () => {
   }
 
   return (
-    <div className="relative flex h-[100vh] w-[75%] flex-col border-l-2 border-[#252525] bg-black text-white">
+    <div className="flex h-[100vh] w-[75%] flex-col border-l-2 border-[#252525] bg-black text-white">
       <ConversationHeader name={name!} username={username!} />
       <ChatBody conversationId={id!} />
       <MessageInput conversationId={id!} />

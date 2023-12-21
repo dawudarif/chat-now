@@ -119,6 +119,11 @@ export const allConversations = async (req: Request, res: Response) => {
         },
       },
     },
+    orderBy: {
+      latestMessage: {
+        createdAt: 'desc'
+      }
+    }
   });
 
   res.status(200).json(getConversations);

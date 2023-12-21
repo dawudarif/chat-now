@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { IMessage } from "../../../types/types";
 import { useSelector } from "react-redux";
+import { IMessage } from "../../../types/types";
 import SingleMessage from "./SingleMessage";
 
 interface ChatBodyProps {
@@ -10,9 +10,11 @@ interface ChatBodyProps {
 
 const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   const [messages, setMessages] = useState<Array<IMessage>>([]);
+  const [loading, setLoading] = useState(false);
   const state = useSelector((store: any) => store.account.userProfile);
 
   const getMessages = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("/api/message/get-messages", {
         params: {
@@ -27,6 +29,8 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
     } catch (error) {
       console.error("Error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,17 +40,21 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   }, [conversationId]);
 
   return (
-    <div className="hide-scrollbar mb-24 h-full flex-col overflow-x-hidden overflow-y-scroll align-bottom">
-      {messages.map((message: IMessage) => {
-        const sentByMe = message.senderId === state?.id;
-        return (
-          <SingleMessage
-            key={message.id}
-            message={message}
-            sentByMe={sentByMe}
-          />
-        );
-      })}
+    <div className="hide-scrollbar flex h-[75%] flex-col-reverse overflow-y-auto">
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        messages.map((message: IMessage) => {
+          const sentByMe = message.senderId === state?.id;
+          return (
+            <SingleMessage
+              key={message.id}
+              message={message}
+              sentByMe={sentByMe}
+            />
+          );
+        })
+      )}
     </div>
   );
 };
