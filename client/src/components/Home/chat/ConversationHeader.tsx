@@ -1,7 +1,16 @@
+import React from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
-const ConversationHeader = ({ name }: { name?: string | null }) => {
+interface ConversationHeaderProps {
+  name: string;
+  username: string;
+}
+
+const ConversationHeader: React.FC<ConversationHeaderProps> = ({
+  name,
+  username,
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -12,9 +21,14 @@ const ConversationHeader = ({ name }: { name?: string | null }) => {
       >
         <IoIosArrowBack size={30} />
       </div>
-      <h4 className="font-sans text-[1.1rem] font-semibold capitalize">
-        {name ? name : "null"}
-      </h4>
+      <div>
+        <h4 className="font-sans text-[1.1rem] font-semibold capitalize">
+          {name ? name : "null"}
+        </h4>
+        <h6 className="font-sans text-[0.8rem] font-semibold lowercase">
+          {username ? `@${username}` : "null"}
+        </h6>
+      </div>
     </div>
   );
 };

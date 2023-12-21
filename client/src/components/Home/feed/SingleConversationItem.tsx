@@ -30,7 +30,7 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
       key={data.id}
       onClick={() =>
         navigate(
-          `/?id=${data.id}&name=${otherUser?.user.name}&read=${hasSeenLatestMessage}`,
+          `/?id=${data.id}&name=${otherUser?.user.name}&username=${otherUser?.user.username}&read=${hasSeenLatestMessage}`,
         )
       }
     >

@@ -6,6 +6,7 @@ import ChatBody from "./ChatBody";
 const Chat = () => {
   const [searchParams] = useSearchParams();
   const name = searchParams.get("name");
+  const username = searchParams.get("username");
   const id = searchParams.get("id");
 
   if (!id && !name) {
@@ -20,7 +21,7 @@ const Chat = () => {
 
   return (
     <div className="relative flex h-[100vh] w-[75%] flex-col border-l-2 border-[#252525] bg-black text-white">
-      <ConversationHeader name={name} />
+      <ConversationHeader name={name!} username={username!} />
       <ChatBody conversationId={id!} />
       <MessageInput conversationId={id!} />
     </div>
