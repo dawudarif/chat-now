@@ -31,6 +31,7 @@ const useSearchUsername = (search: string) => {
 
       return () => clearTimeout(delay);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   return { results };

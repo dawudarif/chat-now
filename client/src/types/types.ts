@@ -27,3 +27,16 @@ export interface IParticipant {
   user: { name: string, username: string };
   userId: string
 }
+
+export interface IMessage {
+  body: string;
+  conversationId: string;
+  createdAt: string;
+  id: string;
+  sender: ISender;
+  senderId: string;
+  updatedAt: string
+}
+
+
+export interface ISender { id: string, name: string, username: string }

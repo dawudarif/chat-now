@@ -36,14 +36,14 @@ const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
   return (
     <form
       onSubmit={sendMessage}
-      className="fixed bottom-0 flex w-full items-center border-t-2 border-[#252525] p-2"
+      className="fixed bottom-0 flex w-full items-center border-t-2 border-[#252525] bg-inherit p-2"
     >
       <input
         type="text"
         placeholder="Enter a message"
         value={messageInput}
         onChange={(e) => setMessageInput(e.target.value)}
-        className="m-2 w-[68%] rounded-lg border-2 border-[#252525] bg-transparent p-3 font-mono"
+        className="m-2 w-[68%] rounded-lg border-2 border-[#252525] bg-inherit p-3 font-mono"
       />
       <button
         className="m-2 w-[5rem] rounded-lg bg-transparent p-3 hover:bg-[#252525]"

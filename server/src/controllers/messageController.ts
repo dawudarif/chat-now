@@ -99,3 +99,46 @@ export const sendMessage = async (req: Request, res: Response) => {
   }
 
 };
+
+
+export const getMessages = async (req: Request, res: Response) => {
+  const { conversationId } = req.query;
+  const userId = req.user.id;
+
+  if (!conversationId) {
+    res.status(500).json('Necessary data not provided');
+    return;
+  }
+
+  const userIsParticipant = await prisma.conversation.findFirst({
+    where: {
+      id: conversationId as string
+      ,
+      participants: {
+        some: {
+          userId
+        }
+      }
+    }
+  })
+
+
+  if (!userIsParticipant) {
+    res.status(500).json('Something went wrong');
+    return;
+  }
+
+  const messages = await prisma.message.findMany({
+    where: {
+      conversationId: conversationId as string,
+    }, include: {
+      sender: {
+        select: {
+          id: true, name: true, username: true
+        }
+      }
+    }
+  })
+
+  res.status(200).json(messages);
+};

@@ -70,7 +70,7 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
 
   return (
     <div
-      className={`relative flex items-center gap-3 border-b border-[#252525] p-2 text-white hover:bg-[#1c1c1e] ${
+      className={`relative flex cursor-pointer items-center gap-3 border-b border-[#252525] p-2 text-white hover:bg-[#1c1c1e] ${
         searchId === data.id && "bg-[#1c1c1e]"
       }`}
       key={data.id}

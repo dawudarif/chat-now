@@ -53,7 +53,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
 
   return (
     <div
-      className="flex items-center gap-3 border-b border-[#252525] p-2 text-white hover:bg-[#1c1c1e]"
+      className="flex cursor-pointer items-center gap-3 border-b border-[#252525] p-2 text-white hover:bg-[#1c1c1e]"
       key={data.id}
       onDoubleClick={() => createConversation(data.id)}
     >
