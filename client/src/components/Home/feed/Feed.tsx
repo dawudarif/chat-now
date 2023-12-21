@@ -18,7 +18,6 @@ const Feed = () => {
         withCredentials: true,
       });
 
-      console.log(response.data);
       setChats(response.data);
     } catch (error) {}
   };
@@ -45,9 +44,11 @@ const Feed = () => {
 
               return (
                 <SingleConversationItem
-                  hasSeenLatestMessage={!participant?.hasSeenLatestMessage}
+                  hasSeenLatestMessage={participant?.hasSeenLatestMessage!}
                   data={item}
                   key={item.id}
+                  chats={chats}
+                  setChats={(chats) => setChats(chats)}
                 />
               );
             })

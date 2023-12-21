@@ -22,7 +22,7 @@ export interface IFeedItem {
 }
 
 export interface IParticipant {
-  hasSeenLatestMessage: string;
+  hasSeenLatestMessage: boolean;
   id: string;
   user: { name: string, username: string };
   userId: string

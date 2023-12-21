@@ -123,3 +123,39 @@ export const allConversations = async (req: Request, res: Response) => {
 
   res.status(200).json(getConversations);
 };
+
+
+export const markConversationAsRead = async (req: Request, res: Response) => {
+  const { conversationId } = req.body;
+  const userId = req.user.id;
+
+  if (!conversationId) {
+    res.status(500).send('Internal server error');
+  }
+
+  const findParticipant = await prisma.conversationParticipant.findFirst({
+    where: {
+      userId,
+      conversationId,
+    },
+  });
+
+  if (!findParticipant) {
+    res.status(500).send('Internal server error');
+  }
+
+  const conversationUpdated = await prisma.conversationParticipant.update({
+    where: {
+      id: findParticipant?.id,
+    },
+    data: {
+      hasSeenLatestMessage: true,
+    },
+  });
+
+  if (conversationUpdated) {
+    res.status(200).json({ 'updated': true });
+  } else {
+    res.status(500).json({ 'updated': false });
+  }
+};
