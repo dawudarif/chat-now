@@ -1,7 +1,5 @@
-import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-import { prisma } from '../prisma/prisma';
-import { IDecoded } from '../types/types';
+import { NextFunction, Request, Response } from 'express';
+import { getUserDetails } from '../utils/getUserDetails';
 
 declare global {
   namespace Express {
@@ -17,30 +15,7 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
 
   if (token && process.env.JWT_SECRET) {
     try {
-      const cookies = token.split('; ');
-      const jwtCookie = cookies.find((cookie) => cookie.startsWith('jwt='));
-
-      if (jwtCookie) {
-        const jwtValue = jwtCookie.split('=')[1];
-        token = jwtValue;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET) as IDecoded;
-
-
-      const findUser = await prisma.account.findUnique({
-        where: {
-          id: decoded?.userId,
-        },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          username: true,
-        },
-      });
-
+      const findUser = await getUserDetails(token)
       req.user = findUser;
 
       next();
@@ -56,3 +31,4 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export { protect };
+

@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../prisma/prisma';
+import { io } from '../server';
+import { Socket } from 'socket.io';
 
 export const sendMessage = async (req: Request, res: Response) => {
   const { body, conversationId, messageId } = req.body;
@@ -16,7 +18,13 @@ export const sendMessage = async (req: Request, res: Response) => {
       id: messageId,
       senderId: userId,
       body,
-    },
+    }, select: {
+      id: true,
+      conversationId: true,
+      body: true,
+      createdAt: true,
+      senderId: true,
+    }
   });
 
 
@@ -90,10 +98,8 @@ export const sendMessage = async (req: Request, res: Response) => {
   });
 
   if (conversation && newMessage) {
-    res.status(200).json({
-      "status": true,
-      "messageId": newMessage.id
-    });
+
+    res.status(200).json(newMessage);
   } else {
     res.status(500).json('something went wrong')
   }
