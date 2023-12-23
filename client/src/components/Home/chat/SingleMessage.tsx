@@ -13,7 +13,11 @@ const SingleMessage: React.FC<SingleMessageProps> = ({ message, sentByMe }) => {
         sentByMe ? "justify-end" : "justify-start"
       }`}
     >
-      <p className="max-h-max max-w-[50%] rounded-xl bg-blue-500 p-2 text-white">
+      <p
+        className={`max-h-max max-w-[50%] rounded-xl ${
+          sentByMe ? "bg-[#252525]" : "bg-blue-500"
+        } p-2 text-white`}
+      >
         {message.body}
       </p>
     </div>

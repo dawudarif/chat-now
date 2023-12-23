@@ -80,7 +80,7 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
         {otherUser?.user.name.slice(0, 2)}
       </div>
       <div>
-        <h4 className="capitalize">{otherUser?.user.name}</h4>
+        <h4>{otherUser?.user.username}</h4>
         <p>{data.latestMessage?.body}</p>
       </div>
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { IMessage } from "../../../types/types";
 import SingleMessage from "./SingleMessage";
+import SingleMessageSkeleton from "../../loaders/SingleMessageSkeleton";
 
 interface ChatBodyProps {
   conversationId: string;
@@ -40,9 +41,13 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   }, [conversationId]);
 
   return (
-    <div className="hide-scrollbar flex h-[75%] flex-col-reverse overflow-y-auto">
+    <div className="hide-scrollbar duration-00 flex h-[75%] flex-col-reverse overflow-y-auto transition-all">
       {loading ? (
-        <p>loading</p>
+        <div className="overflow-hidden">
+          {[...Array(10).keys()].map((i) => (
+            <SingleMessageSkeleton i={i} key={i} />
+          ))}
+        </div>
       ) : (
         messages.map((message: IMessage) => {
           const sentByMe = message.senderId === state?.id;
