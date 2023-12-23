@@ -2,8 +2,12 @@ import { useSearchParams } from "react-router-dom";
 import ChatBody from "./ChatBody";
 import ConversationHeader from "./ConversationHeader";
 import MessageInput from "./MessageInput";
+import { useState } from "react";
+import { IMessage } from "../../../types/types";
 
 const Chat = () => {
+  const [messages, setMessages] = useState<Array<IMessage>>([]);
+
   const [searchParams] = useSearchParams();
   const name = searchParams.get("name");
   const username = searchParams.get("username");

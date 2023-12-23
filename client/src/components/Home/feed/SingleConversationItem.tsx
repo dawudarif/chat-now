@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IFeedItem, IParticipant } from "../../../types/types";
 import axios from "axios";
+import { socket } from "../../../socket";
 
 interface SingleConversationItemProps {
   data: IFeedItem;
@@ -62,7 +63,7 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
     }
 
     setConversationStatus();
-
+    socket.emit("join_conversation", data.id);
     navigate(
       `/?id=${data.id}&name=${otherUser?.user.name}&username=${otherUser?.user.username}`,
     );

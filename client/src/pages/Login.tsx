@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Ring from '../components/loaders/Ring';
+import Ring from "../components/loaders/Ring";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const Login = () => {
       const req = await axios.post("/api/users/auth", body, {
         withCredentials: true,
       });
-      console.log(req.status);
       if (req.status >= 200 && req.status <= 299) {
         window.location.href = "/";
       } else {
@@ -61,8 +60,9 @@ const Login = () => {
         <p className="font-mono text-white">{error}</p>
         <button
           onClick={loginUser}
-          className={`rounded-md border border-white bg-black p-4 px-32 text-center font-bold text-white ${!loading && "hover:bg-white hover:text-black"
-            } w-[100%] transition-colors duration-300`}
+          className={`rounded-md border border-white bg-black p-4 px-32 text-center font-bold text-white ${
+            !loading && "hover:bg-white hover:text-black"
+          } w-[100%] transition-colors duration-300`}
           disabled={loading}
         >
           {loading ? <Ring size={22} /> : <>Login</>}

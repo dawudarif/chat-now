@@ -1,18 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IMessage } from "../../../types/types";
 import SingleMessage from "./SingleMessage";
-import SingleMessageSkeleton from "../../loaders/SingleMessageSkeleton";
+import { socket } from "../../../socket";
+import { setMessagesState } from "../../../features/messages";
+import Ring from "../../loaders/Ring";
 
 interface ChatBodyProps {
   conversationId: string;
 }
 
 const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
-  const [messages, setMessages] = useState<Array<IMessage>>([]);
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
   const state = useSelector((store: any) => store.account.userProfile);
+  const messagesState = useSelector((store: any) => store.message.messages);
 
   const getMessages = async () => {
     setLoading(true);
@@ -24,9 +28,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
         withCredentials: true,
       });
 
-      console.log(response.data);
-      setMessages(response.data);
-      return response.data;
+      dispatch(setMessagesState(response.data));
     } catch (error) {
       console.error("Error:", error);
       throw error;
@@ -40,16 +42,20 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId]);
 
+  useEffect(() => {
+    socket.on("receive_message", (message) => {
+      dispatch(setMessagesState([message, ...messagesState]));
+    });
+  }, [socket]);
+
   return (
     <div className="hide-scrollbar duration-00 flex h-[75%] flex-col-reverse overflow-y-auto transition-all">
       {loading ? (
-        <div className="overflow-hidden">
-          {[...Array(10).keys()].map((i) => (
-            <SingleMessageSkeleton i={i} key={i} />
-          ))}
+        <div className="flex h-full items-center justify-center">
+          <Ring size={30} />
         </div>
       ) : (
-        messages.map((message: IMessage) => {
+        messagesState.map((message: IMessage) => {
           const sentByMe = message.senderId === state?.id;
           return (
             <SingleMessage

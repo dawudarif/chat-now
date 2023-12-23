@@ -2,6 +2,10 @@ import axios from "axios";
 import { FormEvent, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { v4 as uuid } from "uuid";
+import { socket } from "../../../socket";
+import { IMessage } from "../../../types/types";
+import { setMessagesState } from "../../../features/messages";
+import { useDispatch, useSelector } from "react-redux";
 
 interface MessageInputProps {
   conversationId: string;
@@ -9,6 +13,9 @@ interface MessageInputProps {
 
 const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
   const [messageInput, setMessageInput] = useState("");
+
+  const dispatch = useDispatch();
+  const messagesState = useSelector((store: any) => store.message.messages);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,11 +31,10 @@ const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
         withCredentials: true,
       });
 
-      console.log(response.data);
-
-      if (response.data.messageId === generateId && response.status === 200) {
+      if (response.data.id === generateId && response.status === 200) {
         setMessageInput("");
-        console.log(true);
+        await socket.emit("send_message", response.data);
+        dispatch(setMessagesState([response.data, ...messagesState]));
       }
     } catch (error) {}
   };
