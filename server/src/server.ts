@@ -28,14 +28,28 @@ io.on('connection', async (socket) => {
   const cookies = socket.request.headers.cookie;
   const details = await getUserDetails(cookies!); // Assuming this function retrieves user details
 
-  // Listen for events from client
-  socket.on('message', async (message) => {
+  socket.on('join_conversation', (data) => {
+    socket.join(data)
+    console.log('user joined conversation', data);
 
-    console.log('Message received:', message); // Moved the log here for synchronous logging
-    // Broadcast message to the sender as well
-    socket.emit('message', message);
+  })
 
+  socket.on('send_message', (message) => {
+    socket.to(message.conversationId).emit('receive_message', message);
   });
+
+
+
+  // socket.on('createConversation', async (conversation) => {
+  //   console.log('create-conv', conversation, details);
+  //   socket.emit('message', conversation);
+  // });
+
+
+
+
+
+
 
   // Handle disconnect event
   socket.on('disconnect', () => {
