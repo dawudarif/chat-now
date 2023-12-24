@@ -26,7 +26,7 @@ const SingleMessage: React.FC<SingleMessageProps> = ({ message, sentByMe }) => {
         >
           <p className="text-white">{message.body}</p>
           <p className="text-right font-mono text-xs">
-            {moment(message.createdAt).format("h:mm")}
+            {moment(message.createdAt).format("hh:mm")}
           </p>
         </div>
       </div>
