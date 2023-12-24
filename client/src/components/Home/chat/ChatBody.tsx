@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IMessage } from "../../../types/types";
-import SingleMessage from "./SingleMessage";
-import { socket } from "../../../socket";
 import { setMessagesState } from "../../../features/messages";
+import { socket } from "../../../socket";
+import { IMessage } from "../../../types/types";
 import Ring from "../../loaders/Ring";
+import SingleMessage from "./SingleMessage";
 
 interface ChatBodyProps {
   conversationId: string;
@@ -55,8 +55,9 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
           <Ring size={30} />
         </div>
       ) : (
-        messagesState.map((message: IMessage) => {
+        messagesState.map((message: IMessage, i: number) => {
           const sentByMe = message.senderId === state?.id;
+
           return (
             <SingleMessage
               key={message.id}

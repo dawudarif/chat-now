@@ -35,8 +35,6 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
         },
         { withCredentials: true },
       );
-
-      console.log(response.data);
     } catch (error) {}
   };
 

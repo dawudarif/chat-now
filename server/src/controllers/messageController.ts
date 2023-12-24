@@ -24,7 +24,12 @@ export const sendMessage = async (req: Request, res: Response) => {
       body: true,
       createdAt: true,
       senderId: true,
-    }
+      sender: {
+        select: {
+          id: true, name: true, username: true
+        }
+      }
+    },
   });
 
 

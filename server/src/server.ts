@@ -35,7 +35,7 @@ io.on('connection', async (socket) => {
   })
 
   socket.on('send_message', (message) => {
-    socket.to(message.conversationId).emit('receive_message', message);
+    socket.to(message.conversationId).except(socket.id).emit('receive_message', message);
   });
 
 
