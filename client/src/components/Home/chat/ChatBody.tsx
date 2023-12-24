@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessagesState } from "../../../features/messages";
 import { socket } from "../../../socket";
-import { IMessage } from "../../../types/types";
+import { IFeedItem, IMessage } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
 
@@ -17,6 +17,9 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   const dispatch = useDispatch();
   const state = useSelector((store: any) => store.account.userProfile);
   const messagesState = useSelector((store: any) => store.message.messages);
+  const conversationsState = useSelector(
+    (store: any) => store.conversation.conversations,
+  );
 
   const getMessages = async () => {
     setLoading(true);
@@ -43,8 +46,6 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   }, [conversationId]);
 
   useEffect(() => {
-    console.log(messagesState);
-
     socket.on("receive_message", (message: IMessage) => {
       dispatch(setMessagesState([message, ...messagesState]));
     });

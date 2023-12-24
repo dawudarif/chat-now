@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { IMessage } from '../types/types';
 
 const messageSlice = createSlice({
-  name: "user",
+  name: "message",
   initialState: {
     messages: [] as Array<IMessage>,
   },

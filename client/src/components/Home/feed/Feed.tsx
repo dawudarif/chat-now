@@ -1,16 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setConversationState } from "../../../features/conversation";
 import useSearchUsername from "../../../hooks/useSearchUsername";
-import { IFeedItem } from "../../../types/types";
 import SingleConversationItem from "./SingleConversationItem";
 import SingleSearchItem from "./SingleSearchItem";
+import { IFeedItem } from "../../../types/types";
 
 const Feed = () => {
   const [search, setSearch] = useState("");
-  const [chats, setChats] = useState<Array<IFeedItem>>([]);
+
   const { results } = useSearchUsername(search);
+
+  const dispatch = useDispatch();
   const state = useSelector((store: any) => store.account.userProfile);
+  const conversationsState = useSelector(
+    (store: any) => store.conversation.conversations,
+  );
 
   const getConversations = async () => {
     try {
@@ -18,7 +24,7 @@ const Feed = () => {
         withCredentials: true,
       });
 
-      setChats(response.data);
+      dispatch(setConversationState(response.data));
     } catch (error) {}
   };
 
@@ -37,7 +43,7 @@ const Feed = () => {
       />
       <div>
         {search === ""
-          ? chats.map((item) => {
+          ? conversationsState.map((item: IFeedItem) => {
               const participant = item.participants.find((p) => {
                 return p.userId === state?.id;
               });
@@ -47,8 +53,8 @@ const Feed = () => {
                   hasSeenLatestMessage={participant?.hasSeenLatestMessage!}
                   data={item}
                   key={item.id}
-                  chats={chats}
-                  setChats={(chats) => setChats(chats)}
+                  chats={conversationsState}
+                  setChats={(chats) => dispatch(setConversationState(chats))}
                 />
               );
             })
@@ -56,8 +62,8 @@ const Feed = () => {
               <SingleSearchItem
                 data={item}
                 key={item.id}
-                chats={chats}
-                setChats={(chats) => setChats(chats)}
+                chats={conversationsState}
+                setChats={(chats) => dispatch(setConversationState(chats))}
                 setSearch={(search) => setSearch(search)}
               />
             ))}
