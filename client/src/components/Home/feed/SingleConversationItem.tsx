@@ -1,10 +1,9 @@
+import axios from "axios";
+import moment from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IFeedItem, IParticipant } from "../../../types/types";
-import axios from "axios";
-import { socket } from "../../../socket";
-import moment from "moment";
 
 interface SingleConversationItemProps {
   data: IFeedItem;
@@ -62,7 +61,6 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
     }
 
     setConversationStatus();
-    socket.emit("join_conversation", data.id);
     navigate(
       `/?id=${data.id}&name=${otherUser?.user.name}&username=${otherUser?.user.username}`,
     );
@@ -109,7 +107,7 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
       </div>
 
       {!hasSeenLatestMessage && (
-        <div className="absolute right-5 h-3 w-3 rounded-full bg-blue-600"></div>
+        <div className="absolute right-4 top-4 h-3 w-3 rounded-full bg-blue-600"></div>
       )}
     </div>
   );

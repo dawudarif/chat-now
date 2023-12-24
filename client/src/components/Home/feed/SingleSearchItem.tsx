@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { IFeedItem, IParticipant, ISearchResult } from "../../../types/types";
-import { useEffect } from "react";
-import { socket } from "../../../socket";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
@@ -39,13 +37,10 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
         (item: IParticipant) => item.userId !== state.id,
       );
 
-      console.log(response.data);
-
       if (response.status === 200) {
         navigate(
           `/?id=${response.data.id}&name=${chatName.user.name}&username=${chatName.user.username}`,
         );
-        socket.emit("createConversation", data);
       } else {
         setChats([response.data, ...initialChats]);
         navigate(
@@ -57,12 +52,6 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
       setSearch("");
     }
   };
-
-  useEffect(() => {
-    socket.on("createConversation", (data) => {
-      console.log(data);
-    });
-  }, [socket]);
 
   return (
     <div

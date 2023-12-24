@@ -43,9 +43,12 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   }, [conversationId]);
 
   useEffect(() => {
-    socket.on("receive_message", (message) => {
+    console.log(messagesState);
+
+    socket.on("receive_message", (message: IMessage) => {
       dispatch(setMessagesState([message, ...messagesState]));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   return (

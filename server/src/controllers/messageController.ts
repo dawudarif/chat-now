@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import { prisma } from '../prisma/prisma';
-import { io } from '../server';
-import { Socket } from 'socket.io';
 
 export const sendMessage = async (req: Request, res: Response) => {
   const { body, conversationId, messageId } = req.body;
@@ -23,6 +21,7 @@ export const sendMessage = async (req: Request, res: Response) => {
       conversationId: true,
       body: true,
       createdAt: true,
+      updatedAt: true,
       senderId: true,
       sender: {
         select: {

@@ -28,14 +28,67 @@ io.on('connection', async (socket) => {
   const cookies = socket.request.headers.cookie;
   const details = await getUserDetails(cookies!); // Assuming this function retrieves user details
 
-  socket.on('join_conversation', (data) => {
-    socket.join(data)
-    console.log('user joined conversation', data);
 
+
+  socket.on('join_conversation', (conversationId) => {
+    // socket.disconnect()
+    prisma.conversation.findFirst({
+      where: {
+        id: conversationId,
+        participants: {
+          some: {
+            userId: details?.id
+          }
+        }
+      }
+    }).then((conversation) => {
+      if (!conversation) {
+        console.log('Conversation not found');
+        return;
+      } else {
+        console.log('user connected', conversationId);
+
+        socket.join(conversationId)
+      }
+    })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   })
 
   socket.on('send_message', (message) => {
-    socket.to(message.conversationId).except(socket.id).emit('receive_message', message);
+    const conversationId = message?.conversationId;
+
+    if (!conversationId) {
+      console.log('Conversation ID not provided in the message');
+      return;
+    }
+
+    prisma.conversation
+      .findUnique({
+        where: {
+          id: conversationId,
+          participants: {
+            some: {
+              userId: details?.id,
+            },
+          },
+        },
+        select: {
+          participants: true,
+        },
+      })
+      .then((conversation) => {
+        if (!conversation) {
+          console.log('Conversation not found');
+          return;
+        } else {
+          socket.to(message.conversationId).emit('receive_message', message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   });
 
 
@@ -62,38 +115,3 @@ io.on('connection', async (socket) => {
 server.listen(4000, () => {
   console.log('Server listening on port 4000');
 });
-
-
-
-
-// const conversationId = message?.conversationId;
-
-// if (!conversationId) {
-//   console.log('Conversation ID not provided in the message');
-//   return;
-// }
-
-// try {
-//   const conversation = await prisma.conversation.findUnique({
-//     where: {
-//       id: conversationId,
-//     },
-//     select: {
-//       participants: true,
-//     },
-//   });
-
-//   if (!conversation) {
-//     console.log('Conversation not found');
-//     return;
-//   }
-
-//   const recipients = conversation.participants.filter(participant => participant.id !== details?.id);
-
-//   // Emit the message to individual sockets of other participants
-//   recipients.forEach(async recipient => {
-//     const recipientSocket = await io.to(recipient.id).fetchSockets(); // Fetch recipient's socket
-//     recipientSocket.forEach(socket => {
-//       socket.emit('message', message);
-//     });
-//   });
