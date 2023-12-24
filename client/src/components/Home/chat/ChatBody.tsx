@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessagesState } from "../../../features/messages";
 import { socket } from "../../../socket";
-import { IFeedItem, IMessage } from "../../../types/types";
+import { IFeedItem, IMessage, IParticipant } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
+import { setConversationState } from "../../../features/conversation";
 
 interface ChatBodyProps {
   conversationId: string;
@@ -47,6 +48,31 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
 
   useEffect(() => {
     socket.on("receive_message", (message: IMessage) => {
+      const filterConversation = conversationsState.map((item: IFeedItem) => {
+        if (item.id === message.conversationId) {
+          const newParticipants = item.participants.map(
+            (participant: IParticipant) => {
+              if (participant.userId === state.id) {
+                return { ...participant, hasSeenLatestMessage: true };
+              }
+              return participant;
+            },
+          );
+
+          return {
+            ...item,
+            latestMessage: { body: message.body },
+            latestMessageId: message.id,
+            participants: newParticipants,
+          };
+        }
+        return item;
+      });
+
+      console.log(filterConversation);
+
+      dispatch(setConversationState(filterConversation));
+
       dispatch(setMessagesState([message, ...messagesState]));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

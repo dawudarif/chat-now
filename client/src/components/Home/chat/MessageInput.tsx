@@ -3,9 +3,10 @@ import { FormEvent, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { v4 as uuid } from "uuid";
 import { socket } from "../../../socket";
-import { IMessage } from "../../../types/types";
+import { IFeedItem, IMessage, IParticipant } from "../../../types/types";
 import { setMessagesState } from "../../../features/messages";
 import { useDispatch, useSelector } from "react-redux";
+import { setConversationState } from "../../../features/conversation";
 
 interface MessageInputProps {
   conversationId: string;
@@ -15,7 +16,11 @@ const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
   const [messageInput, setMessageInput] = useState("");
 
   const dispatch = useDispatch();
+  const state = useSelector((store: any) => store.account.userProfile);
   const messagesState = useSelector((store: any) => store.message.messages);
+  const conversationsState = useSelector(
+    (store: any) => store.conversation.conversations,
+  );
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,9 +36,34 @@ const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
         withCredentials: true,
       });
 
+      const newMessage = response.data as IMessage;
+
       if (response.data.id === generateId && response.status === 200) {
         setMessageInput("");
+
         await socket.emit("send_message", response.data);
+
+        const filterConversation = conversationsState.map((item: IFeedItem) => {
+          if (item.id === response.data.conversationId) {
+            const newParticipants = item.participants.map(
+              (participant: IParticipant) => {
+                if (participant.userId === state.id) {
+                  return { ...participant, hasSeenLatestMessage: true };
+                }
+                return participant;
+              },
+            );
+
+            return {
+              ...item,
+              latestMessage: { body: newMessage.body },
+              latestMessageId: newMessage.id,
+              participants: newParticipants,
+            };
+          }
+          return item;
+        });
+        dispatch(setConversationState(filterConversation));
         dispatch(setMessagesState([response.data, ...messagesState]));
       }
     } catch (error) {}

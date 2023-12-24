@@ -14,7 +14,7 @@ export interface ISearchResult {
 
 export interface IFeedItem {
   id: string;
-  latestMessage: null | { body: string };
+  latestMessage: { body: string } | any;
   latestMessageId: null | string;
   participants: Array<IParticipant>
   createdAt: string;
