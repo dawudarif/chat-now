@@ -1,6 +1,6 @@
 import axios from "axios";
 import moment from "moment";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IFeedItem, IParticipant } from "../../../types/types";
@@ -25,8 +25,14 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
   const otherUser = data.participants.find(
     (item: IParticipant) => item.userId !== state.id,
   );
+  const user = data.participants.find(
+    (item: IParticipant) => item.userId === state.id,
+  );
 
   const setConversationStatus = async () => {
+    if (searchId !== data.id) return;
+    console.log(searchId, data.id);
+
     try {
       const response = await axios.post(
         "/api/conversations/mark-read",
@@ -35,32 +41,29 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
         },
         { withCredentials: true },
       );
-    } catch (error) {}
-  };
-
-  const navigateToChat = async () => {
-    if (!hasSeenLatestMessage) {
-      const updatedData = {
-        ...data,
-        participants: data.participants.map((participant: IParticipant) => {
-          if (participant.userId === state.id) {
-            return { ...participant, hasSeenLatestMessage: true };
-          }
-          return participant;
-        }),
-      };
 
       const updatedChats = chats.map((chat: IFeedItem) => {
-        if (chat.id === updatedData.id) {
-          return { ...chat, ...updatedData };
+        if (chat.id === data.id) {
+          return {
+            ...chat,
+            participants: chat.participants.map((participant: IParticipant) => {
+              if (participant.userId === state.id) {
+                return { ...participant, hasSeenLatestMessage: true };
+              }
+              return participant;
+            }),
+          };
         }
         return chat;
       });
 
-      setChats(updatedChats);
-    }
+      console.log(updatedChats);
 
-    setConversationStatus();
+      setChats(updatedChats);
+    } catch (error) {}
+  };
+
+  const navigateToChat = async () => {
     navigate(
       `/?id=${data.id}&name=${otherUser?.user.name}&username=${otherUser?.user.username}`,
     );
@@ -86,6 +89,12 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
       return moment(data.updatedAt).format("DD/MM");
     }
   };
+
+  useEffect(() => {
+    if (!user?.hasSeenLatestMessage && searchId) {
+      setConversationStatus();
+    }
+  }, [searchId]);
 
   return (
     <div
