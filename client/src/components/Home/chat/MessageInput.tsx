@@ -10,17 +10,18 @@ import { setConversationState } from "../../../features/conversation";
 
 interface MessageInputProps {
   conversationId: string;
+  conversations: Array<IFeedItem>;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
+const MessageInput: React.FC<MessageInputProps> = ({
+  conversationId,
+  conversations,
+}) => {
   const [messageInput, setMessageInput] = useState("");
 
   const dispatch = useDispatch();
   const state = useSelector((store: any) => store.account.userProfile);
   const messagesState = useSelector((store: any) => store.message.messages);
-  const conversationsState = useSelector(
-    (store: any) => store.conversation.conversations,
-  );
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) => {
 
         await socket.emit("send_message", response.data);
 
-        const filterConversation = conversationsState.map((item: IFeedItem) => {
+        const filterConversation = conversations.map((item: IFeedItem) => {
           if (item.id === response.data.conversationId) {
             const newParticipants = item.participants.map(
               (participant: IParticipant) => {

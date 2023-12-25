@@ -6,10 +6,12 @@ import useSearchUsername from "../../../hooks/useSearchUsername";
 import SingleConversationItem from "./SingleConversationItem";
 import SingleSearchItem from "./SingleSearchItem";
 import { IFeedItem } from "../../../types/types";
+import { useSearchParams } from "react-router-dom";
 
 const Feed = () => {
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
   const [search, setSearch] = useState("");
-
   const { results } = useSearchUsername(search);
 
   const dispatch = useDispatch();
@@ -33,7 +35,11 @@ const Feed = () => {
   }, []);
 
   return (
-    <div className="flex h-[100vh] w-[25%] flex-col bg-black text-white">
+    <div
+      className={`flex ${
+        id ? "sm:hidden md:hidden xs:hidden" : "sm:w-full md:w-full xs:w-full"
+      } h-[100vh] w-[25%] flex-col bg-black text-white`}
+    >
       <input
         type="text"
         placeholder="Search username"

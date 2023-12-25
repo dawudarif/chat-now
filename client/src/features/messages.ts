@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IMessage } from '../types/types';
 
+
 const messageSlice = createSlice({
   name: "message",
   initialState: {
@@ -10,9 +11,14 @@ const messageSlice = createSlice({
     setMessagesState: (state, action) => {
       state.messages = action.payload;
     },
+    addNewMessage: (state, action) => {
+      const newMessage = action.payload as IMessage
+      const newMessages = [newMessage, ...state.messages]
+      state.messages = newMessages
+    }
   },
 });
 
-export const { setMessagesState } = messageSlice.actions;
+export const { setMessagesState, addNewMessage } = messageSlice.actions;
 
 export default messageSlice.reducer;

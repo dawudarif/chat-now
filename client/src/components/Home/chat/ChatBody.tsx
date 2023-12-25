@@ -1,26 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessagesState } from "../../../features/messages";
+import { addNewMessage, setMessagesState } from "../../../features/messages";
 import { socket } from "../../../socket";
 import { IFeedItem, IMessage, IParticipant } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
-import { setConversationState } from "../../../features/conversation";
+import {
+  setConversationState,
+  updateConversations,
+} from "../../../features/conversation";
 
 interface ChatBodyProps {
   conversationId: string;
+  conversations: Array<IFeedItem>;
 }
 
-const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
+const ChatBody: React.FC<ChatBodyProps> = ({
+  conversationId,
+  conversations,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const state = useSelector((store: any) => store.account.userProfile);
   const messagesState = useSelector((store: any) => store.message.messages);
-  const conversationsState = useSelector(
-    (store: any) => store.conversation.conversations,
-  );
 
   const getMessages = async () => {
     setLoading(true);
@@ -47,39 +51,19 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   }, [conversationId]);
 
   useEffect(() => {
-    socket.on("receive_message", (message: IMessage) => {
-      const filterConversation = conversationsState.map((item: IFeedItem) => {
-        if (item.id === message.conversationId) {
-          const newParticipants = item.participants.map(
-            (participant: IParticipant) => {
-              if (participant.userId === state.id) {
-                return { ...participant, hasSeenLatestMessage: true };
-              }
-              return participant;
-            },
-          );
+    socket.on("receive_message", (message) => {
+      console.count(message?.body);
 
-          return {
-            ...item,
-            latestMessage: { body: message.body },
-            latestMessageId: message.id,
-            participants: newParticipants,
-          };
-        }
-        return item;
-      });
+      const update = { message, userId: state.userId };
 
-      console.log(filterConversation);
-
-      dispatch(setConversationState(filterConversation));
-
-      dispatch(setMessagesState([message, ...messagesState]));
+      dispatch(updateConversations(update));
+      dispatch(addNewMessage(message));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   return (
-    <div className="hide-scrollbar duration-00 flex h-[75%] flex-col-reverse overflow-y-auto transition-all">
+    <div className="hide-scrollbar flex h-[75%] flex-col-reverse overflow-y-auto transition-all duration-500">
       {loading ? (
         <div className="flex h-full items-center justify-center">
           <Ring size={30} />
