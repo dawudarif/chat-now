@@ -31,7 +31,6 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
 
   const setConversationStatus = async () => {
     if (searchId !== data.id) return;
-    console.log(searchId, data.id);
 
     try {
       const response = await axios.post(
@@ -56,8 +55,6 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
         }
         return chat;
       });
-
-      console.log(updatedChats);
 
       setChats(updatedChats);
     } catch (error) {}

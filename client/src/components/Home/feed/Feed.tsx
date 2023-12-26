@@ -7,6 +7,7 @@ import SingleConversationItem from "./SingleConversationItem";
 import SingleSearchItem from "./SingleSearchItem";
 import { IFeedItem } from "../../../types/types";
 import { useSearchParams } from "react-router-dom";
+import { CiLogout } from "react-icons/ci";
 
 const Feed = () => {
   const [searchParams] = useSearchParams();
@@ -19,6 +20,12 @@ const Feed = () => {
   const conversationsState = useSelector(
     (store: any) => store.conversation.conversations,
   );
+
+  const logoutUser = async () => {
+    await axios.get("api/users/logout", { withCredentials: true });
+
+    window.location.href = "/";
+  };
 
   const getConversations = async () => {
     try {
@@ -38,7 +45,7 @@ const Feed = () => {
     <div
       className={`flex ${
         id ? "sm:hidden md:hidden xs:hidden" : "sm:w-full md:w-full xs:w-full"
-      } h-[100vh] w-[25%] flex-col bg-black text-white`}
+      } relative h-[100vh] w-[25%] flex-col bg-black text-white`}
     >
       <input
         type="text"
@@ -73,6 +80,13 @@ const Feed = () => {
                 setSearch={(search) => setSearch(search)}
               />
             ))}
+      </div>
+
+      <div
+        className="absolute bottom-3 left-3 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#252525] text-xl font-bold uppercase text-white transition-all duration-500 hover:scale-110"
+        onClick={() => logoutUser()}
+      >
+        <CiLogout size={30} color="white" />
       </div>
     </div>
   );
