@@ -1,25 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { updateConversations } from "../../../features/conversation";
 import { addNewMessage, setMessagesState } from "../../../features/messages";
 import { socket } from "../../../socket";
-import { IFeedItem, IMessage, IParticipant } from "../../../types/types";
+import { IFeedItem, IMessage } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
-import {
-  setConversationState,
-  updateConversations,
-} from "../../../features/conversation";
 
 interface ChatBodyProps {
   conversationId: string;
-  conversations: Array<IFeedItem>;
 }
 
-const ChatBody: React.FC<ChatBodyProps> = ({
-  conversationId,
-  conversations,
-}) => {
+const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();

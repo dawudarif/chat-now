@@ -19,7 +19,7 @@ const Chat = () => {
   useEffect(() => {
     if (!conversationId) return;
     socket.emit("join_conversation", conversationId);
-  }, [conversationId]);
+  }, [conversationId, socket]);
 
   if (!conversationId && !name) {
     return (
@@ -46,10 +46,7 @@ const Chat = () => {
       } h-[100vh] w-[75%] flex-col border-l-2 border-[#252525] bg-black text-white `}
     >
       <ConversationHeader name={name!} username={username!} />
-      <ChatBody
-        conversationId={conversationId!}
-        conversations={conversations}
-      />
+      <ChatBody conversationId={conversationId!} />
       <MessageInput
         conversationId={conversationId!}
         conversations={conversations}

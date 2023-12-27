@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { IFeedItem, IParticipant, ISearchResult } from "../../../types/types";
+import { socket } from "../../../socket";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
@@ -43,6 +44,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
         );
       } else {
         setChats([response.data, ...initialChats]);
+        await socket.emit("create-conversation", response.data);
         navigate(
           `/?id=${response.data.id}&name=${chatName.user.name}&username=${chatName.user.username}`,
         );

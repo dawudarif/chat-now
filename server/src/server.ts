@@ -28,10 +28,18 @@ io.on('connection', async (socket) => {
   const cookies = socket.request.headers.cookie;
   const details = await getUserDetails(cookies!); // Assuming this function retrieves user details
 
-
+  socket.on('join_user', (id) => {
+    try {
+      if (id === details?.id) {
+        console.log('user connected', id);
+        socket.join(id)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  })
 
   socket.on('join_conversation', (conversationId) => {
-    // socket.disconnect()
     prisma.conversation.findFirst({
       where: {
         id: conversationId,
@@ -46,7 +54,7 @@ io.on('connection', async (socket) => {
         console.log('Conversation not found');
         return;
       } else {
-        console.log('user connected', conversationId);
+        console.log('user connected to conversation', conversationId);
 
         socket.join(conversationId)
       }
@@ -91,18 +99,48 @@ io.on('connection', async (socket) => {
       });
   });
 
-
-
-  // socket.on('createConversation', async (conversation) => {
-  //   console.log('create-conv', conversation, details);
-  //   socket.emit('message', conversation);
-  // });
-
-
-
-
-
-
+  socket.on('create-conversation', (conversation) => {
+    prisma.conversation.findFirst({
+      where: {
+        id: conversation.id,
+      }, select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        latestMessage: {
+          select: {
+            body: true
+          }
+        },
+        latestMessageId: true,
+        participants: {
+          select: {
+            hasSeenLatestMessage: true,
+            id: true,
+            user: {
+              select: {
+                name: true, username: true
+              }
+            },
+            userId: true
+          }
+        }
+      }
+    }).then((conversation) => {
+      if (!conversation) {
+        console.log('Conversation not found');
+        return;
+      } else {
+        const otherParticipant = conversation.participants.find((item) => item.userId !== details?.id)
+        if (otherParticipant) {
+          socket.to(otherParticipant?.userId).emit('receive-new-conversation', conversation);
+        }
+      }
+    })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
 
   // Handle disconnect event
   socket.on('disconnect', () => {

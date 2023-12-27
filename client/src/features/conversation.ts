@@ -39,10 +39,14 @@ const conversationSlice = createSlice({
 
 
       state.conversations = filterConversation
+    },
+    addNewConversation: (state, action) => {
+      const addNewConversations = [action.payload, ...state.conversations]
+      state.conversations = addNewConversations
     }
   },
 });
 
-export const { setConversationState, updateConversations } = conversationSlice.actions;
+export const { setConversationState, updateConversations, addNewConversation } = conversationSlice.actions;
 
 export default conversationSlice.reducer;
