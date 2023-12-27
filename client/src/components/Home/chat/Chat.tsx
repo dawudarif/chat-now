@@ -19,6 +19,7 @@ const Chat = () => {
   useEffect(() => {
     if (!conversationId) return;
     socket.emit("join_conversation", conversationId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId, socket]);
 
   if (!conversationId && !name) {
