@@ -68,7 +68,7 @@ const Login = () => {
           {loading ? <Ring size={22} /> : <>Login</>}
         </button>
         <Link to="/register" className="italic text-white hover:underline">
-          New to Image.ly? Register here.
+          New to Chat app? Register here.
         </Link>
       </form>
     </div>
