@@ -54,8 +54,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
       dispatch(addNewMessage(message));
     });
 
-    socket.on("update-conversation", (message: any) => {
-      console.log("update-conversation", message);
+    socket.on("update-conversation", (message) => {
       dispatch(updateMessageInConversation({ message, userId: state.id }));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

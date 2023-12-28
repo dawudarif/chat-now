@@ -17,7 +17,7 @@ export const socketManager = (io: Server) => {
     socket.on('join_user', (id) => {
       try {
         if (id === details?.id) {
-          console.log('user connected', id);
+          console.log('user connected', id, details.name);
           socket.join(id)
         }
       } catch (error) {

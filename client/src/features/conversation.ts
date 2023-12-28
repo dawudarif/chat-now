@@ -47,13 +47,17 @@ const conversationSlice = createSlice({
     updateMessageInConversation: (state, action) => {
       const newMessage = action.payload.message as IMessage;
       const userId = action.payload.userId
+      console.log(newMessage, userId);
+
+
 
       if (!newMessage || !userId) {
         return;
       }
 
-      const updatedConversations = state.conversations.map((item: IFeedItem) => {
+      console.log(newMessage, userId);
 
+      state.conversations = state.conversations.map((item: IFeedItem) => {
         if (item.id === newMessage.conversationId) {
           const newParticipants = item.participants.map(
             (participant: IParticipant) => {
@@ -72,11 +76,9 @@ const conversationSlice = createSlice({
           }
         }
 
-        return item
+        return item;
       });
 
-
-      state.conversations = updatedConversations
     }
   },
 });

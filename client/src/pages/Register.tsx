@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import Ring from '../components/loaders/Ring';
+import Ring from "../components/loaders/Ring";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -87,8 +87,9 @@ const Register = () => {
         <p className="font-mono text-white">{error}</p>
         <button
           onClick={registerUser}
-          className={`rounded-md border border-white bg-black p-4 px-32 text-center font-bold text-white ${!loading && "hover:bg-white hover:text-black"
-            } w-[100%] transition-colors duration-300`}
+          className={`rounded-md border border-white bg-black p-4 px-32 text-center font-bold text-white ${
+            !loading && "hover:bg-white hover:text-black"
+          } w-[100%] transition-colors duration-300`}
           disabled={loading}
         >
           {loading ? <Ring size={22} /> : <> Register </>}
