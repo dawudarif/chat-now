@@ -12,22 +12,24 @@ const Home = () => {
   const state = useSelector((store: any) => store.account.userProfile);
 
   useEffect(() => {
-    if (!state?.id) return;
-    socket.emit("join_user", state.id);
+    if (state) {
+      socket.emit("join_user", state.id);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state?.id, socket]);
+  }, [state, socket]);
 
   useEffect(() => {
-    if (!state?.id) return;
-    socket.on("receive-new-conversation", (conversation) => {
-      dispatch(addNewConversation(conversation));
-    });
+    if (state) {
+      socket.on("receive-new-conversation", (conversation) => {
+        dispatch(addNewConversation(conversation));
+      });
 
-    socket.on("update-conversation", (message) => {
-      dispatch(updateMessageInConversation({ message, userId: state?.id }));
-    });
+      socket.on("update-conversation", (message) => {
+        dispatch(updateMessageInConversation({ message, userId: state?.id }));
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket]);
+  }, [socket, state]);
 
   return (
     <>
