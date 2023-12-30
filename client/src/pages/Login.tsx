@@ -38,7 +38,8 @@ const Login = () => {
     if (state) {
       navigate("/");
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   return (
     <div className="flex min-h-[100vh] justify-center bg-black py-4">

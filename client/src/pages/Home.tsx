@@ -6,7 +6,6 @@ import {
   updateMessageInConversation,
 } from "../features/conversation";
 import { socket } from "../socket";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
