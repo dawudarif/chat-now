@@ -1,13 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateConversations,
-  updateMessageInConversation,
-} from "../../../features/conversation";
+import { updateConversations } from "../../../features/conversation";
 import { addNewMessage, setMessagesState } from "../../../features/messages";
 import { socket } from "../../../socket";
-import { IFeedItem, IMessage } from "../../../types/types";
+import { IMessage } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
 
@@ -48,15 +45,12 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
 
   useEffect(() => {
     socket.on("receive_message", (message) => {
-      const update = { message, userId: state.userId };
+      const update = { message, userId: state?.id };
 
       dispatch(updateConversations(update));
       dispatch(addNewMessage(message));
     });
 
-    socket.on("update-conversation", (message) => {
-      dispatch(updateMessageInConversation({ message, userId: state.id }));
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 

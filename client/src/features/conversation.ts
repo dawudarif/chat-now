@@ -12,10 +12,8 @@ const conversationSlice = createSlice({
     },
     updateConversations: (state, action) => {
       const newConversations = state.conversations.map((item: IFeedItem) => {
-
         const message = action.payload.message
         const userId = action.payload.userId
-
 
         if (item.id === message.conversationId) {
           const newParticipants = item.participants.map(
@@ -47,15 +45,10 @@ const conversationSlice = createSlice({
     updateMessageInConversation: (state, action) => {
       const newMessage = action.payload.message as IMessage;
       const userId = action.payload.userId
-      console.log(newMessage, userId);
-
-
 
       if (!newMessage || !userId) {
         return;
       }
-
-      console.log(newMessage, userId);
 
       state.conversations = state.conversations.map((item: IFeedItem) => {
         if (item.id === newMessage.conversationId) {

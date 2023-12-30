@@ -5,7 +5,7 @@ import { prisma } from '../prisma/prisma';
 
 export const socketManager = (io: Server) => {
   io.on('connection', async (socket) => {
-    console.log('Client connected with ID:', socket.id);
+    // console.log('Client connected with ID:', socket.id);
     const cookies = socket.request.headers.cookie;
     const details = await getUserDetails(cookies!);
 
@@ -17,7 +17,7 @@ export const socketManager = (io: Server) => {
     socket.on('join_user', (id) => {
       try {
         if (id === details?.id) {
-          console.log('user connected', id, details.name);
+          console.log(details.name);
           socket.join(id)
         }
       } catch (error) {

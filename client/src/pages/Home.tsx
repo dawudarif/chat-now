@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Home/Wrapper";
-import { useEffect } from "react";
+import {
+  addNewConversation,
+  updateMessageInConversation,
+} from "../features/conversation";
 import { socket } from "../socket";
-import { addNewConversation } from "../features/conversation";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -12,11 +16,16 @@ const Home = () => {
     if (!state?.id) return;
     socket.emit("join_user", state.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, socket]);
+  }, [state?.id, socket]);
 
   useEffect(() => {
+    if (!state?.id) return;
     socket.on("receive-new-conversation", (conversation) => {
       dispatch(addNewConversation(conversation));
+    });
+
+    socket.on("update-conversation", (message) => {
+      dispatch(updateMessageInConversation({ message, userId: state?.id }));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
