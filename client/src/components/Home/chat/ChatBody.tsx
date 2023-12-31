@@ -32,6 +32,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
       dispatch(setMessagesState(response.data));
     } catch (error) {
       toast.error("There was an error fetching messages.");
+      dispatch(setMessagesState([]));
     } finally {
       setLoading(false);
     }

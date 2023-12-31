@@ -26,51 +26,69 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!state) return;
+    const initialConversations = [...conversations];
+    const initialMessages = [...messagesState];
     const generateId = uuid();
 
-    const body = {
+    const reqBody = {
       conversationId,
       messageId: generateId,
       body: messageInput,
     };
+
+    const sendMessage = {
+      id: generateId,
+      conversationId,
+      body: reqBody.body,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      senderId: state?.id,
+      sender: {
+        id: state?.id,
+        name: state?.name,
+        username: state?.username,
+      },
+    };
+
+    const filterConversation = conversations.map((item: IFeedItem) => {
+      if (item.id === conversationId) {
+        const newParticipants = item.participants.map(
+          (participant: IParticipant) => {
+            if (participant.userId === state.id) {
+              return { ...participant, hasSeenLatestMessage: true };
+            }
+            return participant;
+          },
+        );
+
+        return {
+          ...item,
+          latestMessage: { body: reqBody.body },
+          latestMessageId: reqBody.messageId,
+          participants: newParticipants,
+        };
+      }
+      return item;
+    });
+
+    dispatch(setConversationState(filterConversation));
+    dispatch(setMessagesState([sendMessage, ...messagesState]));
+    setMessageInput("");
+
     try {
-      const response = await axios.post("/api/message/send", body, {
+      const response = await axios.post("/api/message/send", reqBody, {
         withCredentials: true,
       });
 
-      const newMessage = response.data as IMessage;
-
       if (response.data.id === generateId && response.status === 200) {
-        setMessageInput("");
-
-        await socket.emit("send_message", response.data);
-
-        const filterConversation = conversations.map((item: IFeedItem) => {
-          if (item.id === response.data.conversationId) {
-            const newParticipants = item.participants.map(
-              (participant: IParticipant) => {
-                if (participant.userId === state.id) {
-                  return { ...participant, hasSeenLatestMessage: true };
-                }
-                return participant;
-              },
-            );
-
-            return {
-              ...item,
-              latestMessage: { body: newMessage.body },
-              latestMessageId: newMessage.id,
-              participants: newParticipants,
-            };
-          }
-          return item;
-        });
-
-        dispatch(setConversationState(filterConversation));
         dispatch(setMessagesState([response.data, ...messagesState]));
+        await socket.emit("send_message", response.data);
       }
     } catch (error) {
       toast.error("There was an error sending message.");
+      dispatch(setConversationState(initialConversations));
+      dispatch(setMessagesState(initialMessages));
     }
   };
 

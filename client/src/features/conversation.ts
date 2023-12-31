@@ -24,11 +24,13 @@ const conversationSlice = createSlice({
       }
 
       state.conversations = state.conversations.map((item: IFeedItem) => {
+        const isSelected = item.id === selectedConversation ? true : false
+
         if (item.id === newMessage.conversationId) {
           const newParticipants = item.participants.map(
             (participant: IParticipant) => {
               if (participant.userId === userId) {
-                return { ...participant, hasSeenLatestMessage: item.id === selectedConversation ? true : false };
+                return { ...participant, hasSeenLatestMessage: isSelected };
               }
               return participant;
             },

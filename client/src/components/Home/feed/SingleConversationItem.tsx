@@ -32,32 +32,35 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
   const setConversationStatus = async () => {
     if (searchId !== data.id) return;
 
+    const initialChats = [...chats];
+
+    const updatedChats = chats.map((chat: IFeedItem) => {
+      if (chat.id === data.id) {
+        return {
+          ...chat,
+          participants: chat.participants.map((participant: IParticipant) => {
+            if (participant.userId === state.id) {
+              return { ...participant, hasSeenLatestMessage: true };
+            }
+            return participant;
+          }),
+        };
+      }
+      return chat;
+    });
+    setChats(updatedChats);
+
     try {
-      const response = await axios.post(
+      await axios.post(
         "/api/conversations/mark-read",
         {
           conversationId: data.id,
         },
         { withCredentials: true },
       );
-
-      const updatedChats = chats.map((chat: IFeedItem) => {
-        if (chat.id === data.id) {
-          return {
-            ...chat,
-            participants: chat.participants.map((participant: IParticipant) => {
-              if (participant.userId === state.id) {
-                return { ...participant, hasSeenLatestMessage: true };
-              }
-              return participant;
-            }),
-          };
-        }
-        return chat;
-      });
-
-      setChats(updatedChats);
-    } catch (error) {}
+    } catch (error) {
+      setChats(initialChats);
+    }
   };
 
   const navigateToChat = async () => {
