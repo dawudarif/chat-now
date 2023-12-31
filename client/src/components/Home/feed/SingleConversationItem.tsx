@@ -94,6 +94,7 @@ const SingleConversationItem: React.FC<SingleConversationItemProps> = ({
     if (!user?.hasSeenLatestMessage && searchId) {
       setConversationStatus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchId]);
 
   return (

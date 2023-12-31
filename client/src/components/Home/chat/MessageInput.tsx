@@ -1,13 +1,13 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
-import { IoSend } from "react-icons/io5";
-import { v4 as uuid } from "uuid";
-import { socket } from "../../../socket";
-import { IFeedItem, IMessage, IParticipant } from "../../../types/types";
-import { setMessagesState } from "../../../features/messages";
-import { useDispatch, useSelector } from "react-redux";
-import { setConversationState } from "../../../features/conversation";
 import toast from "react-hot-toast";
+import { IoSend } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuid } from "uuid";
+import { setConversationState } from "../../../features/conversation";
+import { setMessagesState } from "../../../features/messages";
+import { socket } from "../../../socket";
+import { IFeedItem, IParticipant } from "../../../types/types";
 
 interface MessageInputProps {
   conversationId: string;

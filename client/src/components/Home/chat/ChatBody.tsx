@@ -65,7 +65,10 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
             <SingleMessage
               key={message.id}
               message={message}
+              messages={messagesState}
               sentByMe={sentByMe}
+              index={i}
+              length={messagesState.length}
             />
           );
         })

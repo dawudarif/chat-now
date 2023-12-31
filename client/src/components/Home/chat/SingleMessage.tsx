@@ -4,15 +4,37 @@ import { IMessage } from "../../../types/types";
 
 interface SingleMessageProps {
   message: IMessage;
+  messages: Array<IMessage>;
   sentByMe: boolean;
+  index: number;
+  length: number;
 }
 
-const SingleMessage: React.FC<SingleMessageProps> = ({ message, sentByMe }) => {
+const SingleMessage: React.FC<SingleMessageProps> = ({
+  message,
+  sentByMe,
+  index,
+  length,
+  messages,
+}) => {
+  const getDateFormat = (date: string) => {
+    return moment(date).format("DD/MM/YY");
+  };
+
+  const first = index === length - 1;
+
+  const display =
+    index !== length - 1 &&
+    getDateFormat(messages[index + 1].createdAt) !==
+      getDateFormat(message.createdAt);
+
   return (
     <div>
-      <p className="text-md py-6 text-center font-mono text-white">
-        {moment(message.createdAt).format("DD/MM/YY")}
-      </p>
+      {(first || display) && (
+        <p className="text-md py-6 text-center font-mono text-white">
+          {getDateFormat(message.createdAt)}
+        </p>
+      )}
 
       <div
         className={`box-border flex w-[100%] break-words px-3 py-2 ${
