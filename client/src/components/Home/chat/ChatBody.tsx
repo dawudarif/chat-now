@@ -6,6 +6,7 @@ import { socket } from "../../../socket";
 import { IMessage } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
+import toast from "react-hot-toast";
 
 interface ChatBodyProps {
   conversationId: string;
@@ -30,8 +31,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
 
       dispatch(setMessagesState(response.data));
     } catch (error) {
-      console.error("Error:", error);
-      throw error;
+      toast.error("There was an error fetching messages.");
     } finally {
       setLoading(false);
     }

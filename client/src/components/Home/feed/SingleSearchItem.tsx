@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { IFeedItem, IParticipant, ISearchResult } from "../../../types/types";
 import { socket } from "../../../socket";
+import toast from "react-hot-toast";
 
 interface SingleSearchItemProps {
   data: ISearchResult;
@@ -50,6 +51,7 @@ const SingleSearchItem: React.FC<SingleSearchItemProps> = ({
         );
       }
     } catch (error) {
+      toast.error("There was an error creating conversation.");
     } finally {
       setSearch("");
     }

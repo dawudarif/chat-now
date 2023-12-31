@@ -8,6 +8,7 @@ import SingleSearchItem from "./SingleSearchItem";
 import { IFeedItem } from "../../../types/types";
 import { useSearchParams } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
+import toast from "react-hot-toast";
 
 const Feed = () => {
   const [searchParams] = useSearchParams();
@@ -34,7 +35,9 @@ const Feed = () => {
       });
 
       dispatch(setConversationState(response.data));
-    } catch (error) {}
+    } catch (error) {
+      toast.error("There was an error fetching conversations.");
+    }
   };
 
   useEffect(() => {

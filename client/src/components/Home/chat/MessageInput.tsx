@@ -7,6 +7,7 @@ import { IFeedItem, IMessage, IParticipant } from "../../../types/types";
 import { setMessagesState } from "../../../features/messages";
 import { useDispatch, useSelector } from "react-redux";
 import { setConversationState } from "../../../features/conversation";
+import toast from "react-hot-toast";
 
 interface MessageInputProps {
   conversationId: string;
@@ -64,10 +65,13 @@ const MessageInput: React.FC<MessageInputProps> = ({
           }
           return item;
         });
+
         dispatch(setConversationState(filterConversation));
         dispatch(setMessagesState([response.data, ...messagesState]));
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("There was an error sending message.");
+    }
   };
 
   return (

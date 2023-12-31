@@ -7,6 +7,7 @@ import "./index.css";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { Toaster } from "react-hot-toast";
 
 const Fallback = () => (
   <div className="flex h-[80vh] w-full flex-col items-center justify-center gap-6 bg-black">
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-right" />
       <Suspense fallback={<Fallback />}>
         <Routes>
           <Route index path="/" element={<Home />} />
