@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConversations } from "../../../features/conversation";
 import { addNewMessage, setMessagesState } from "../../../features/messages";
 import { socket } from "../../../socket";
 import { IMessage } from "../../../types/types";
@@ -45,9 +44,6 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
 
   useEffect(() => {
     socket.on("receive_message", (message) => {
-      const update = { message, userId: state?.id };
-
-      dispatch(updateConversations(update));
       dispatch(addNewMessage(message));
     });
 

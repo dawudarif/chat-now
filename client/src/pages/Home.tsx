@@ -6,9 +6,13 @@ import {
   updateMessageInConversation,
 } from "../features/conversation";
 import { socket } from "../socket";
+import { useSearchParams } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const selectedConversation = searchParams.get("id");
+  console.log(selectedConversation);
   const state = useSelector((store: any) => store.account.userProfile);
 
   useEffect(() => {
@@ -25,7 +29,13 @@ const Home = () => {
       });
 
       socket.on("update-conversation", (message) => {
-        dispatch(updateMessageInConversation({ message, userId: state?.id }));
+        dispatch(
+          updateMessageInConversation({
+            message,
+            userId: state?.id,
+            selected: selectedConversation,
+          }),
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
