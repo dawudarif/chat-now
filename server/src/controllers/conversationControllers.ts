@@ -120,9 +120,7 @@ export const allConversations = async (req: Request, res: Response) => {
       },
     },
     orderBy: {
-      latestMessage: {
-        createdAt: 'desc'
-      }
+      updatedAt: 'desc'
     }
   });
 

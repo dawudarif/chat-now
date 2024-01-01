@@ -102,10 +102,10 @@ const MessageInput: React.FC<MessageInputProps> = ({
         placeholder="Enter a message"
         value={messageInput}
         onChange={(e) => setMessageInput(e.target.value)}
-        className="m-2 w-[95%] rounded-lg border-2 border-[#252525] bg-inherit p-3 font-mono"
+        className="m-2 w-[95%] rounded-lg border-2 border-[#252525] bg-inherit p-3 font-mono sm:w-[90%] md:w-[90%] xs:w-[85%]"
       />
       <button
-        className="m-2 w-[5%] rounded-lg bg-transparent p-3 hover:bg-[#252525]"
+        className="m-2 w-[5%] rounded-lg bg-transparent p-3 hover:bg-[#252525] sm:w-[10%] md:w-[10%] xs:w-[15%]"
         type="submit"
       >
         <IoSend size={30} />

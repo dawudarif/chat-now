@@ -23,7 +23,7 @@ const conversationSlice = createSlice({
         return;
       }
 
-      state.conversations = state.conversations.map((item: IFeedItem) => {
+      const updatedConversations = state.conversations.map((item: IFeedItem) => {
         const isSelected = item.id === selectedConversation ? true : false
 
         if (item.id === newMessage.conversationId) {
@@ -41,11 +41,23 @@ const conversationSlice = createSlice({
             latestMessage: { body: newMessage.body },
             latestMessageId: newMessage.id,
             participants: newParticipants,
+            updatedAt: new Date().toISOString()
           }
         }
 
         return item;
       });
+
+
+      const sortedConversations = updatedConversations.sort((a, b) => {
+        const dateA = new Date(a.updatedAt);
+        const dateB = new Date(b.updatedAt);
+
+        // @ts-ignore
+        return dateB - dateA; // Ascending order
+      });
+
+      state.conversations = sortedConversations
 
     }
   },
