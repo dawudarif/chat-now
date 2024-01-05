@@ -19,22 +19,30 @@ const Register = () => {
   const registerUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     try {
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
       const body = { email, password, username, name };
       const response = await axios.post("/api/users/register", body, {
         withCredentials: true,
       });
 
+      console.log("response");
+
       if (response.status !== 201) {
-        setError(response.data);
+        throw new Error(response.data?.error);
       }
+
       window.location.href = "/";
-    } catch (error) {
-      // setError(error?.response?.data?.error);
+    } catch (error: any) {
+      if (error.response.status) {
+        window.location.href = "/";
+      }
+      setError(error.response.data.error);
     } finally {
       setLoading(false);
     }
