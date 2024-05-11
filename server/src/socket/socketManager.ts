@@ -17,7 +17,7 @@ export const socketManager = (io: Server) => {
     socket.on('join_user', (id) => {
       try {
         if (id === details?.id) {
-          console.log(`user connected: id: ${details.name} name:${details.name}`);
+          console.log(`user connected: id: ${details.id} name:${details.name}`);
           socket.join(id)
         }
       } catch (error) {
@@ -40,7 +40,7 @@ export const socketManager = (io: Server) => {
           console.log('Conversation not found');
           return;
         } else {
-          console.log('user connected to conversation', conversationId);
+          console.log('User connected to conversation: ', conversationId);
           socket.join(conversationId)
         }
       })

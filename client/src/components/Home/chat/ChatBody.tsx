@@ -7,6 +7,7 @@ import { IMessage } from "../../../types/types";
 import Ring from "../../loaders/Ring";
 import SingleMessage from "./SingleMessage";
 import toast from "react-hot-toast";
+import { updateMessageInConversation } from "../../../features/conversation";
 
 interface ChatBodyProps {
   conversationId: string;
@@ -46,6 +47,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({ conversationId }) => {
   useEffect(() => {
     socket.on("receive_message", (message) => {
       dispatch(addNewMessage(message));
+      dispatch(updateMessageInConversation(message));
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

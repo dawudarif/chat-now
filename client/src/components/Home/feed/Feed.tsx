@@ -24,8 +24,7 @@ const Feed = () => {
 
   const logoutUser = async () => {
     await axios.get("api/users/logout", { withCredentials: true });
-
-    window.location.href = "/";
+    window.location.href = "/login";
   };
 
   const getConversations = async () => {
